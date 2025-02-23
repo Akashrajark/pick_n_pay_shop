@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pick_n_pay_shop/features/Login/signin_screen.dart';
+import 'package:pick_n_pay_shop/features/Signin/signin_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void checkLogin(BuildContext context) {

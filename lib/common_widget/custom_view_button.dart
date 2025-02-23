@@ -17,11 +17,11 @@ class CustomViewButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Text(
-            'View',
+            'View details',
             style: Theme.of(context)
                 .textTheme
-                .labelSmall!
-                .copyWith(color: onprimaryColor, fontWeight: FontWeight.w400),
+                .bodySmall!
+                .copyWith(fontWeight: FontWeight.normal, color: Colors.white),
           ),
         ),
       ),
