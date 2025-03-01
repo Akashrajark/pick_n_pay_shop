@@ -53,7 +53,7 @@ class ProductScreen extends StatelessWidget {
               columns: const [
                 DataColumn(label: Text('Product Name')),
                 DataColumn(label: Text('MRP')),
-                DataColumn(label: Text('Image URL')),
+                DataColumn(label: Text('Image')),
                 DataColumn(label: Text('stock')),
                 DataColumn(label: Text('Unit')),
                 DataColumn(label: Text('Category')),
@@ -63,9 +63,17 @@ class ProductScreen extends StatelessWidget {
                 DataRow(cells: [
                   const DataCell(Text('Tiger Biscket')),
                   const DataCell(Text('10 Rs')),
-                  const DataCell(Text('https://image.example.com')),
+                  DataCell(ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      'https://cf.shopee.com.my/file/0906fc78a8782f2f29351003e26a01ba',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
                   const DataCell(Text('100')),
-                  const DataCell(Text('30')),
+                  const DataCell(Text('g')),
                   const DataCell(Text('Biscket')),
                   DataCell(Row(
                     children: [

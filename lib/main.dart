@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pick_n_pay_shop/features/home/home.dart';
+import 'package:pick_n_pay_shop/features/Signin/signin_screen.dart';
+// import 'package:pick_n_pay_shop/features/home/home.dart';
 import 'package:pick_n_pay_shop/theme/app_theme.dart';
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: appTheme,
-      home: const Home(),
+      home: const SigninScreen(),
     );
   }
 }

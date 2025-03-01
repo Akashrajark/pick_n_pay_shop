@@ -13,6 +13,14 @@ class PendingOrderScreen extends StatefulWidget {
 }
 
 class _PendingOrderScreenState extends State<PendingOrderScreen> {
+  final List<Map<String, dynamic>> pendingOrders = [
+    {'id': '#65421', 'name': 'John Doe', 'pickup': '6:00 PM'},
+    {'id': '#65422', 'name': 'Jane Smith', 'pickup': '6:30 PM'},
+    {'id': '#65423', 'name': 'Alice Johnson', 'pickup': '7:00 PM'},
+    {'id': '#65424', 'name': 'Robert Brown', 'pickup': '7:30 PM'},
+    {'id': '#65425', 'name': 'Emma Davis', 'pickup': '8:00 PM'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,45 +50,49 @@ class _PendingOrderScreenState extends State<PendingOrderScreen> {
           ),
           const SizedBox(height: 30),
           Expanded(
-            child: DataTable2(columns: const [
-              DataColumn(label: Text('Order ID')),
-              DataColumn(label: Text('Customer Name')),
-              DataColumn(label: Text('Pickup Time')),
-              DataColumn(label: Text('Order Items')),
-              DataColumn(label: Text('Actions'), numeric: true),
-            ], rows: [
-              DataRow(cells: [
-                DataCell(Text('#65421')),
-                DataCell(Text('Sugu')),
-                DataCell(Text('6:00')),
-                DataCell(CustomViewButton(
-                  ontap: () {
-                    Navigator.push(
+            child: DataTable2(
+              columns: const [
+                DataColumn(label: Text('Order ID')),
+                DataColumn(label: Text('Customer Name')),
+                DataColumn(label: Text('Pickup Time')),
+                DataColumn(label: Text('Order Items')),
+                DataColumn(label: Text('Actions'), numeric: true),
+              ],
+              rows: pendingOrders.map((order) {
+                return DataRow(cells: [
+                  DataCell(Text(order['id'])),
+                  DataCell(Text(order['name'])),
+                  DataCell(Text(order['pickup'])),
+                  DataCell(CustomViewButton(
+                    ontap: () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderDetailsPage(),
-                        ));
-                  },
-                )),
-                DataCell(Row(
-                  children: [
-                    CustomActionbutton(
+                        ),
+                      );
+                    },
+                  )),
+                  DataCell(Row(
+                    children: [
+                      CustomActionbutton(
                         ontap: () {},
                         title: 'Accept',
                         icon: Icons.done_all,
-                        color: Colors.green),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    CustomActionbutton(
+                        color: Colors.green,
+                      ),
+                      const SizedBox(width: 15),
+                      CustomActionbutton(
                         ontap: () {},
                         title: 'Reject',
                         icon: Icons.close,
-                        color: Colors.red)
-                  ],
-                )),
-              ])
-            ]),
+                        color: Colors.red,
+                      )
+                    ],
+                  )),
+                ]);
+              }).toList(),
+            ),
           )
         ],
       ),
