@@ -8,6 +8,14 @@ import 'package:pick_n_pay_shop/theme/app_theme.dart';
 class ReadyToPickup extends StatelessWidget {
   const ReadyToPickup({super.key});
 
+  final List<Map<String, dynamic>> readyToPickupOrders = const [
+    {'id': '#44654', 'name': 'Roman', 'status': 'Pending', 'pickup': '3:00 PM'},
+    {'id': '#44655', 'name': 'Emma', 'status': 'Ready', 'pickup': '3:30 PM'},
+    {'id': '#44656', 'name': 'Liam', 'status': 'Pending', 'pickup': '4:00 PM'},
+    {'id': '#44657', 'name': 'Ava', 'status': 'Ready', 'pickup': '4:30 PM'},
+    {'id': '#44658', 'name': 'Noah', 'status': 'Pending', 'pickup': '5:00 PM'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,48 +24,52 @@ class ReadyToPickup extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Ready to pickup',
+            'Ready to Pickup',
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
                 .copyWith(fontWeight: FontWeight.bold, color: Colors.green),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Expanded(
-              child: DataTable2(columns: const [
-            DataColumn(label: Text('Order ID')),
-            DataColumn(label: Text('Customer Name')),
-            DataColumn(label: Text('Status')),
-            DataColumn(label: Text('Pickup Time')),
-            DataColumn(label: Text('Order Items')),
-            DataColumn(label: Text('Action'), numeric: true),
-          ], rows: [
-            DataRow(cells: [
-              DataCell(Text('#44654')),
-              DataCell(Text('Shuppandi')),
-              DataCell(Text('Pending')),
-              DataCell(Text('3:00')),
-              DataCell(CustomViewButton(
-                ontap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrderDetailsPage(),
-                      ));
-                },
-              )),
-              DataCell(SizedBox(
-                width: 90,
-                child: CustomActionbutton(
-                    ontap: () {},
-                    title: "Delivered",
-                    icon: Icons.chevron_right_outlined,
-                    color: secondaryColor),
-              )),
-            ])
-          ]))
+            child: DataTable2(
+              columns: const [
+                DataColumn(label: Text('Order ID')),
+                DataColumn(label: Text('Customer Name')),
+                DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Pickup Time')),
+                DataColumn(label: Text('Order Items')),
+                DataColumn(label: Text('Action'), numeric: true),
+              ],
+              rows: readyToPickupOrders.map((order) {
+                return DataRow(cells: [
+                  DataCell(Text(order['id'])),
+                  DataCell(Text(order['name'])),
+                  DataCell(Text(order['status'])),
+                  DataCell(Text(order['pickup'])),
+                  DataCell(CustomViewButton(
+                    ontap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetailsPage(),
+                        ),
+                      );
+                    },
+                  )),
+                  DataCell(SizedBox(
+                    width: 90,
+                    child: CustomActionbutton(
+                      ontap: () {},
+                      title: "Delivered",
+                      icon: Icons.chevron_right_outlined,
+                      color: secondaryColor,
+                    ),
+                  )),
+                ]);
+              }).toList(),
+            ),
+          )
         ],
       ),
     );

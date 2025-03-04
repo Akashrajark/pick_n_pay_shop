@@ -6,6 +6,14 @@ import 'package:pick_n_pay_shop/features/pending_orders/order_view_detail_page.d
 class OrderDeliveredScreen extends StatelessWidget {
   const OrderDeliveredScreen({super.key});
 
+  final List<Map<String, dynamic>> deliveredOrders = const [
+    {'id': '#44654', 'name': 'Joseph', 'status': 'Delivered'},
+    {'id': '#44655', 'name': 'Sophia', 'status': 'Delivered'},
+    {'id': '#44656', 'name': 'Ethan', 'status': 'Delivered'},
+    {'id': '#44657', 'name': 'Isabella', 'status': 'Delivered'},
+    {'id': '#44658', 'name': 'Mason', 'status': 'Delivered'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -20,31 +28,34 @@ class OrderDeliveredScreen extends StatelessWidget {
                 .titleLarge!
                 .copyWith(fontWeight: FontWeight.bold, color: Colors.green),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Expanded(
-              child: DataTable2(columns: const [
-            DataColumn(label: Text('Order ID')),
-            DataColumn(label: Text('Customer Name')),
-            DataColumn(label: Text('Status')),
-            DataColumn(label: Text('Order Items')),
-          ], rows: [
-            DataRow(cells: [
-              DataCell(Text('#44654')),
-              DataCell(Text('Shuppandi')),
-              DataCell(Text('Delivered')),
-              DataCell(CustomViewButton(
-                ontap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrderDetailsPage(),
-                      ));
-                },
-              )),
-            ])
-          ]))
+            child: DataTable2(
+              columns: const [
+                DataColumn(label: Text('Order ID')),
+                DataColumn(label: Text('Customer Name')),
+                DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Order Items'), numeric: true),
+              ],
+              rows: deliveredOrders.map((order) {
+                return DataRow2(cells: [
+                  DataCell(Text(order['id'])),
+                  DataCell(Text(order['name'])),
+                  DataCell(Text(order['status'])),
+                  DataCell(CustomViewButton(
+                    ontap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetailsPage(),
+                        ),
+                      );
+                    },
+                  )),
+                ]);
+              }).toList(),
+            ),
+          )
         ],
       ),
     );
