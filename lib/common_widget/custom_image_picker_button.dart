@@ -57,7 +57,7 @@ class _CustomImagePickerButtonState extends State<CustomImagePickerButton> {
                       fit: BoxFit.cover,
                     ),
                   )
-                : _selectedFile != null
+                : _selectedFile != null && _selectedFile!.bytes != null
                     ? ClipRRect(
                         borderRadius:
                             BorderRadius.circular(widget.borderRadius),

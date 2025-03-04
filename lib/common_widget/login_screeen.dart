@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pick_n_pay_shop/common_widget/custom_alert_dialog.dart';
-import 'package:pick_n_pay_shop/common_widget/custom_button.dart';
-import 'package:pick_n_pay_shop/common_widget/custom_text_formfield.dart';
-import 'package:pick_n_pay_shop/features/home/home.dart';
-import 'package:pick_n_pay_shop/util/value_validator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'login_bloc/login_bloc.dart';
+import '../features/Signin/login_bloc/login_bloc.dart';
+import '../features/home/home.dart';
+import '../util/value_validator.dart';
+import 'custom_alert_dialog.dart';
+import 'custom_button.dart';
+import 'custom_text_formfield.dart';
 
-class SigninScreen extends StatefulWidget {
-  const SigninScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SigninScreen> createState() => _SigninScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SigninScreenState extends State<SigninScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -31,7 +31,7 @@ class _SigninScreenState extends State<SigninScreen> {
           milliseconds: 100,
         ), () {
       User? currentUser = Supabase.instance.client.auth.currentUser;
-      if (currentUser != null && currentUser.appMetadata['role'] == 'shop') {
+      if (currentUser != null && currentUser.appMetadata['role'] == 'admin') {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),
@@ -69,7 +69,6 @@ class _SigninScreenState extends State<SigninScreen> {
             return Center(
               child: Container(
                 width: 400,
-                height: 500,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(30),
@@ -79,13 +78,14 @@ class _SigninScreenState extends State<SigninScreen> {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Center(
                           child: Image(
-                              height: 200,
-                              width: 200,
+                              height: 100,
+                              width: 100,
                               image: AssetImage(
                                 'assets/images/p&plogo.png',
                               )),
@@ -94,9 +94,11 @@ class _SigninScreenState extends State<SigninScreen> {
                           height: 10,
                         ),
                         const Text(
-                          "Shop Login",
+                          "Admin Login",
                           style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.bold),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 15.0),
                         CustomTextFormField(
@@ -107,13 +109,13 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                         const SizedBox(height: 15.0),
                         CustomTextFormField(
-                          labelText: 'Password',
-                          controller: _passwordController,
-                          validator: notEmptyValidator,
-                          isLoading: state is LoginLoadingState,
-                        ),
+                            isLoading: state is LoginLoadingState,
+                            labelText: 'Password',
+                            controller: _passwordController,
+                            validator: notEmptyValidator),
                         const SizedBox(height: 40),
                         CustomButton(
+                          isLoading: state is LoginLoadingState,
                           inverse: true,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {

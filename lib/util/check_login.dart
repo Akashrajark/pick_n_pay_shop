@@ -8,8 +8,7 @@ void checkLogin(BuildContext context) {
         milliseconds: 100,
       ), () {
     User? currentUser = Supabase.instance.client.auth.currentUser;
-    if (!(currentUser != null &&
-        (currentUser.appMetadata['role'] == 'admin'))) {
+    if (!(currentUser != null && (currentUser.appMetadata['role'] == 'shop'))) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const SigninScreen(),

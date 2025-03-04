@@ -2,7 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_n_pay_shop/common_widget/custom_search.dart';
 import 'package:pick_n_pay_shop/common_widget/custom_view_button.dart';
-import 'package:pick_n_pay_shop/features/pending_orders/custom_action_button.dart';
+import 'package:pick_n_pay_shop/features/orders/custom_action_button.dart';
 import 'package:pick_n_pay_shop/features/pending_orders/order_view_detail_page.dart';
 
 class PendingOrderScreen extends StatefulWidget {
