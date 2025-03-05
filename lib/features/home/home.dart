@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pick_n_pay_shop/common_widget/custom_alert_dialog.dart';
 import 'package:pick_n_pay_shop/features/Product/product_screen.dart';
-import 'package:pick_n_pay_shop/features/Profile/profile_screen.dart';
 import 'package:pick_n_pay_shop/features/dashboard/dashboard_screen.dart';
 import 'package:pick_n_pay_shop/theme/app_theme.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../common_widget/login_screeen.dart';
 import '../orders/orders_screen.dart';
 import 'custom_drawer_item.dart';
 
@@ -71,17 +72,30 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 const SizedBox(height: 50),
+                // CustomDrawerItem(
+                //   title: 'Dashboard',
+                //   icon: Icons.dashboard_outlined,
+                //   ontap: () {
+                //     tabController.animateTo(0);
+                //   },
+                //   isSelected: tabController.index == 0,
+                //   iconColor:
+                //       tabController.index == 0 ? Colors.orange : Colors.black,
+                //   textColor:
+                //       tabController.index == 0 ? Colors.orange : Colors.black,
+                // ),
+                // const SizedBox(height: 10),
                 CustomDrawerItem(
-                  title: 'Dashboard',
-                  icon: Icons.dashboard_outlined,
-                  ontap: () {
-                    tabController.animateTo(0);
-                  },
-                  isSelected: tabController.index == 0,
                   iconColor:
                       tabController.index == 0 ? Colors.orange : Colors.black,
                   textColor:
                       tabController.index == 0 ? Colors.orange : Colors.black,
+                  isSelected: tabController.index == 0,
+                  title: 'Products',
+                  icon: Icons.inventory_2_outlined,
+                  ontap: () {
+                    tabController.animateTo(0);
+                  },
                 ),
                 const SizedBox(height: 10),
                 CustomDrawerItem(
@@ -90,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen>
                   textColor:
                       tabController.index == 1 ? Colors.orange : Colors.black,
                   isSelected: tabController.index == 1,
-                  title: 'Products',
-                  icon: Icons.inventory_2_outlined,
+                  title: 'Pending Order',
+                  icon: Icons.access_time_outlined,
                   ontap: () {
                     tabController.animateTo(1);
                   },
@@ -103,8 +117,8 @@ class _HomeScreenState extends State<HomeScreen>
                   textColor:
                       tabController.index == 2 ? Colors.orange : Colors.black,
                   isSelected: tabController.index == 2,
-                  title: 'Pending Order',
-                  icon: Icons.access_time_outlined,
+                  title: 'Gathering Orders',
+                  icon: Icons.checklist_rtl_outlined,
                   ontap: () {
                     tabController.animateTo(2);
                   },
@@ -116,8 +130,8 @@ class _HomeScreenState extends State<HomeScreen>
                   textColor:
                       tabController.index == 3 ? Colors.orange : Colors.black,
                   isSelected: tabController.index == 3,
-                  title: 'Gathering Orders',
-                  icon: Icons.checklist_rtl_outlined,
+                  title: 'Ready to Pickup',
+                  icon: Icons.timer_outlined,
                   ontap: () {
                     tabController.animateTo(3);
                   },
@@ -129,23 +143,10 @@ class _HomeScreenState extends State<HomeScreen>
                   textColor:
                       tabController.index == 4 ? Colors.orange : Colors.black,
                   isSelected: tabController.index == 4,
-                  title: 'Ready to Pickup',
-                  icon: Icons.timer_outlined,
-                  ontap: () {
-                    tabController.animateTo(4);
-                  },
-                ),
-                const SizedBox(height: 10),
-                CustomDrawerItem(
-                  iconColor:
-                      tabController.index == 5 ? Colors.orange : Colors.black,
-                  textColor:
-                      tabController.index == 5 ? Colors.orange : Colors.black,
-                  isSelected: tabController.index == 5,
                   title: 'Order Delivered',
                   icon: Icons.beenhere_outlined,
                   ontap: () {
-                    tabController.animateTo(5);
+                    tabController.animateTo(4);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -165,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen>
                 CustomDrawerItem(
                   iconColor: Colors.red,
                   textColor: Colors.red,
-                  isSelected: tabController.index == 7,
+                  isSelected: tabController.index == 5,
                   title: 'LogOut',
                   icon: Icons.logout,
                   ontap: () {
@@ -179,13 +180,13 @@ class _HomeScreenState extends State<HomeScreen>
                         width: 400,
                         primaryButton: "LOG OUT",
                         onPrimaryPressed: () {
-                          // Supabase.instance.client.auth.signOut();
-                          // Navigator.pushAndRemoveUntil(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => const LoginScreen(),
-                          //     ),
-                          //     (route) => false);
+                          Supabase.instance.client.auth.signOut();
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                              (route) => false);
                         },
                       ),
                     );
@@ -199,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen>
               physics: const NeverScrollableScrollPhysics(),
               controller: tabController,
               children: const [
-                DashboardScreen(),
+                // DashboardScreen(),
                 ProductScreen(),
                 OrdersScreen(status: "pending"),
                 OrdersScreen(status: "Packing"),
