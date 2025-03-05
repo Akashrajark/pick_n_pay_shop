@@ -5,6 +5,7 @@ import 'package:logger/web.dart';
 import 'package:pick_n_pay_shop/common_widget/custom_alert_dialog.dart';
 import 'package:pick_n_pay_shop/common_widget/custom_search.dart';
 import 'package:pick_n_pay_shop/features/Orders/orders_bloc/orders_bloc.dart';
+import 'package:pick_n_pay_shop/util/format_function.dart';
 
 import '../../common_widget/custom_view_button.dart';
 import '../../theme/app_theme.dart';
@@ -106,7 +107,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       columns: const [
                         DataColumn(label: Text('Order ID')),
                         DataColumn(label: Text('Customer Name')),
-                        DataColumn(label: Text('Pickup Time')),
+                        DataColumn(label: Text('Created At')),
                         DataColumn(label: Text('Status')),
                         DataColumn(
                           label: Align(
@@ -119,32 +120,107 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         (index) {
                           return DataRow(
                             cells: [
-                              DataCell(Text(_orders[index]['order_id'])),
-                              DataCell(Text(_orders[index]['customer_name'])),
+                              DataCell(Text(_orders[index]['id'].toString())),
+                              DataCell(Text(formatValue(
+                                  _orders[index]['customers']['name']))),
                               DataCell(Text(
-                                  _orders[index]['total_amount'].toString())),
-                              DataCell(Text(_orders[index]['status'])),
+                                  formatDate(_orders[index]['created_at']))),
                               DataCell(Text(_orders[index]['status'])),
                               DataCell(
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   spacing: 10,
                                   children: [
-                                    if (widget.status == "Pending")
+                                    if (widget.status == "pending")
                                       CustomActionbutton(
-                                          ontap: () {},
+                                          ontap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  CustomAlertDialog(
+                                                title:
+                                                    'Change Status to Packing?',
+                                                description:
+                                                    'Are you sure you want to change the status to Packing?',
+                                                primaryButton: 'Confirm',
+                                                onPrimaryPressed: () {
+                                                  _ordersBloc.add(
+                                                    EditOrderEvent(
+                                                      orderDetails: {
+                                                        'status': 'Packing'
+                                                      },
+                                                      orderId: _orders[index]
+                                                          ['id'],
+                                                    ),
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                secondaryButton: 'Cancel',
+                                              ),
+                                            );
+                                          },
                                           title: 'Packing',
                                           icon: Icons.done_all,
                                           color: Colors.green),
                                     if (widget.status == "Packing")
                                       CustomActionbutton(
-                                          ontap: () {},
+                                          ontap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  CustomAlertDialog(
+                                                title:
+                                                    'Change Status to Ready?',
+                                                description:
+                                                    'Are you sure you want to change the status to Ready?',
+                                                primaryButton: 'Confirm',
+                                                onPrimaryPressed: () {
+                                                  _ordersBloc.add(
+                                                    EditOrderEvent(
+                                                      orderDetails: {
+                                                        'status': 'Ready'
+                                                      },
+                                                      orderId: _orders[index]
+                                                          ['id'],
+                                                    ),
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                secondaryButton: 'Cancel',
+                                              ),
+                                            );
+                                          },
                                           title: "Ready",
                                           icon: Icons.chevron_right_outlined,
                                           color: secondaryColor),
                                     if (widget.status == "Ready")
                                       CustomActionbutton(
-                                          ontap: () {},
+                                          ontap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  CustomAlertDialog(
+                                                title:
+                                                    'Change Status to Collected?',
+                                                description:
+                                                    'Are you sure you want to change the status to Collected?',
+                                                primaryButton: 'Confirm',
+                                                onPrimaryPressed: () {
+                                                  _ordersBloc.add(
+                                                    EditOrderEvent(
+                                                      orderDetails: {
+                                                        'status': 'Collected'
+                                                      },
+                                                      orderId: _orders[index]
+                                                          ['id'],
+                                                    ),
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                secondaryButton: 'Cancel',
+                                              ),
+                                            );
+                                          },
                                           title: "Collected",
                                           icon: Icons.chevron_right_outlined,
                                           color: secondaryColor),
@@ -154,7 +230,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                OrderDetailsPage(),
+                                                OrderDetailsPage(
+                                              orderDetails: _orders[index],
+                                            ),
                                           ),
                                         );
                                       },

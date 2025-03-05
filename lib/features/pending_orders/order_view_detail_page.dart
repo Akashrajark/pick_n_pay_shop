@@ -14,25 +14,12 @@ class OrderItem {
 }
 
 class OrderDetailsPage extends StatelessWidget {
-  const OrderDetailsPage({super.key});
+  final Map orderDetails;
+  const OrderDetailsPage({super.key, required this.orderDetails});
 
   @override
   Widget build(BuildContext context) {
     // Sample data - In real app, this would come from a backend
-    final List<OrderItem> orderItems = [
-      OrderItem(
-        image:
-            'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&w=1000&q=80',
-        name: 'Pizza Margherita',
-        count: 2,
-      ),
-      OrderItem(
-        image:
-            'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&w=1000&q=80',
-        name: 'Chicken Wings',
-        count: 1,
-      ),
-    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -54,10 +41,11 @@ class OrderDetailsPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 30,
                             backgroundImage: NetworkImage(
-                                'https://static.vecteezy.com/system/resources/previews/001/131/187/large_2x/serious-man-portrait-real-people-high-definition-grey-background-photo.jpg'),
+                              orderDetails['customers']['photo'],
+                            ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -65,12 +53,12 @@ class OrderDetailsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Order #12345',
+                                  'Order ${orderDetails['id']}',
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 const SizedBox(height: 4),
-                                const Text(
-                                  'John Doe',
+                                Text(
+                                  orderDetails['customers']['name'],
                                   style: TextStyle(fontSize: 16),
                                 ),
                               ],
@@ -91,11 +79,10 @@ class OrderDetailsPage extends StatelessWidget {
                               ),
                               Material(
                                 borderRadius: BorderRadius.circular(15),
-                                color: Colors.orange,
                                 child: Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Text(
-                                    'In Progress',
+                                    orderDetails['status'],
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall!
@@ -107,16 +94,16 @@ class OrderDetailsPage extends StatelessWidget {
                               )
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                'Pickup Time',
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const Text('Today, 2:30 PM'),
-                            ],
-                          ),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.end,
+                          //   children: [
+                          //     Text(
+                          //       'Pickup Time',
+                          //       style: Theme.of(context).textTheme.titleMedium,
+                          //     ),
+                          //     const Text('Today, 2:30 PM'),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ],
@@ -133,10 +120,10 @@ class OrderDetailsPage extends StatelessWidget {
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: orderItems.length,
+                itemCount: orderDetails['order_items'].length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
-                  final item = orderItems[index];
+                  final item = orderDetails['order_items'][index];
                   return Card(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -149,7 +136,8 @@ class OrderDetailsPage extends StatelessWidget {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               image: DecorationImage(
-                                image: NetworkImage(item.image),
+                                image: NetworkImage(
+                                    item['shop_products']['image_url']),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -158,7 +146,7 @@ class OrderDetailsPage extends StatelessWidget {
                           // Item Details
                           Expanded(
                             child: Text(
-                              item.name,
+                              item['shop_products']['name'],
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
@@ -170,7 +158,7 @@ class OrderDetailsPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'x${item.count}',
+                              'x${item['quantity']}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),

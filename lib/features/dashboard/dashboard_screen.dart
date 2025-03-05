@@ -1,90 +1,97 @@
 import 'package:flutter/material.dart';
-import 'package:pick_n_pay_shop/features/dashboard/dashboard_item.dart';
-import 'package:data_table_2/data_table_2.dart';
-import 'package:pick_n_pay_shop/common_widget/custom_view_button.dart';
-import 'package:pick_n_pay_shop/features/pending_orders/order_view_detail_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/web.dart';
 
-class DashboardScreen extends StatelessWidget {
+import '../../common_widget/custom_alert_dialog.dart';
+import 'dashboard_bloc/dashboard_bloc.dart';
+import 'dashboard_item.dart';
+
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
-  // Recently delivered orders data
-  final List<Map<String, dynamic>> recentlyDeliveredOrders = const [
-    {'id': '#44654', 'name': 'Joseph', 'status': 'Delivered'},
-    {'id': '#44655', 'name': 'Sophia', 'status': 'Delivered'},
-    {'id': '#44656', 'name': 'Ethan', 'status': 'Delivered'},
-    {'id': '#44657', 'name': 'Isabella', 'status': 'Delivered'},
-    {'id': '#44658', 'name': 'Mason', 'status': 'Delivered'},
-  ];
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final DashboardBloc _dashboardBloc = DashboardBloc();
+  Map<String, dynamic> _dashboardData = {};
+
+  @override
+  void initState() {
+    getDashboardData();
+    super.initState();
+  }
+
+  void getDashboardData() {
+    _dashboardBloc.add(GetDashboardDataEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Dashboard summary cards
-          Wrap(
-            spacing: 100,
-            runSpacing: 20,
-            children: [
-              DashboardItem(
-                  label: 'Total Orders',
-                  value: '455',
-                  iconData: Icons.shopping_bag_outlined),
-              DashboardItem(
-                  label: 'Total Revenue',
-                  value: '459,000,00',
-                  iconData: Icons.currency_rupee),
-              DashboardItem(
-                  label: 'Total Products',
-                  value: '4512',
-                  iconData: Icons.person_2_outlined),
-            ],
-          ),
-
-          const SizedBox(height: 30),
-
-          // Recently delivered orders section
-          Text(
-            'Recently Delivered Orders',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.green),
-          ),
-          const SizedBox(height: 20),
-
-          // Data table for recently delivered orders
-          SizedBox(
-            height: 300, // You can adjust this height as needed
-            child: DataTable2(
-              columns: const [
-                DataColumn(label: Text('Order ID')),
-                DataColumn(label: Text('Customer Name')),
-                DataColumn(label: Text('Status')),
-                DataColumn(label: Text('Order Items'), numeric: true),
+    return BlocProvider.value(
+      value: _dashboardBloc,
+      child: BlocConsumer<DashboardBloc, DashboardState>(
+        listener: (context, state) {
+          if (state is DashboardFailureState) {
+            showDialog(
+              context: context,
+              builder: (context) => CustomAlertDialog(
+                title: 'Failure',
+                description: 'Failed to load dashboard data. Please try again.',
+                primaryButton: 'Try Again',
+                onPrimaryPressed: () {
+                  getDashboardData();
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          } else if (state is DashboardSuccessState) {
+            _dashboardData = state.data;
+            Logger().w(_dashboardData);
+            setState(() {});
+          }
+        },
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (state is DashboardLoadingState)
+                  const Center(child: CircularProgressIndicator()),
+                if (state is DashboardSuccessState && _dashboardData.isEmpty)
+                  const Center(child: Text('No Data Found')),
+                if (state is DashboardSuccessState && _dashboardData.isNotEmpty)
+                  Wrap(
+                    spacing: 25,
+                    children: [
+                      DashboardItem(
+                        label: 'Total Shops',
+                        value: _dashboardData['total_shops'].toString(),
+                        iconData: Icons.shopping_bag_outlined,
+                      ),
+                      DashboardItem(
+                        label: 'Total Orders',
+                        value: _dashboardData['total_orders'].toString(),
+                        iconData: Icons.shopping_cart_outlined,
+                      ),
+                      DashboardItem(
+                        label: 'Total Categories',
+                        value: _dashboardData['total_categories'].toString(),
+                        iconData: Icons.category_outlined,
+                      ),
+                      DashboardItem(
+                        label: 'Total Users',
+                        value: _dashboardData['total_users'].toString(),
+                        iconData: Icons.person_2_outlined,
+                      ),
+                    ],
+                  ),
               ],
-              rows: recentlyDeliveredOrders.map((order) {
-                return DataRow2(cells: [
-                  DataCell(Text(order['id'])),
-                  DataCell(Text(order['name'])),
-                  DataCell(Text(order['status'])),
-                  DataCell(CustomViewButton(
-                    ontap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrderDetailsPage(),
-                        ),
-                      );
-                    },
-                  )),
-                ]);
-              }).toList(),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

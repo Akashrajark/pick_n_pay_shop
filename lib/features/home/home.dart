@@ -149,19 +149,19 @@ class _HomeScreenState extends State<HomeScreen>
                   },
                 ),
                 const SizedBox(height: 10),
-                CustomDrawerItem(
-                  iconColor:
-                      tabController.index == 6 ? Colors.orange : Colors.black,
-                  textColor:
-                      tabController.index == 6 ? Colors.orange : Colors.black,
-                  isSelected: tabController.index == 6,
-                  title: 'Profile Screen',
-                  icon: Icons.person_2_outlined,
-                  ontap: () {
-                    tabController.animateTo(6);
-                  },
-                ),
-                const SizedBox(height: 10),
+                // CustomDrawerItem(
+                //   iconColor:
+                //       tabController.index == 6 ? Colors.orange : Colors.black,
+                //   textColor:
+                //       tabController.index == 6 ? Colors.orange : Colors.black,
+                //   isSelected: tabController.index == 6,
+                //   title: 'Profile Screen',
+                //   icon: Icons.person_2_outlined,
+                //   ontap: () {
+                //     tabController.animateTo(6);
+                //   },
+                // ),
+                // const SizedBox(height: 10),
                 CustomDrawerItem(
                   iconColor: Colors.red,
                   textColor: Colors.red,
@@ -201,11 +201,11 @@ class _HomeScreenState extends State<HomeScreen>
               children: const [
                 DashboardScreen(),
                 ProductScreen(),
-                OrdersScreen(status: "Pending"),
+                OrdersScreen(status: "pending"),
                 OrdersScreen(status: "Packing"),
                 OrdersScreen(status: "Ready"),
                 OrdersScreen(status: "Collected"),
-                ProfileScreen()
+                // ProfileScreen()
               ],
             ),
           ),
